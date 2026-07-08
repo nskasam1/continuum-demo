@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-sans: "Satoshi", system-ui, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, monospace;
 
   --color-ink: #0b1f3a;
   --color-ink-light: #16305a;
   --color-bg: #f2f4f7;
   --color-panel: #ffffff;
   --color-line: #dde2ea;
-  --color-muted: #6b7280;
+  --color-muted: #5a6472;
   --color-text: #111827;
 
   --color-teal: #0ea5a0;

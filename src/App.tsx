@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SourcePanel } from "./components/SourcePanel";
 import { BriefPanel } from "./components/BriefPanel";
 import { SynthesisButton } from "./components/SynthesisButton";
 import { SignoffBar } from "./components/SignoffBar";
 import { ThesisStatement } from "./components/ThesisStatement";
 import { ResetControl } from "./components/ResetControl";
+import { CARD_COUNT, SYNTHESIS_DURATION_MS, cardExitFinishMs } from "./animation";
 
 export type Stage = "idle" | "synthesizing" | "synthesized" | "confirmed";
-
-const SYNTHESIS_DURATION_MS = 950;
 
 function App() {
   const [stage, setStage] = useState<Stage>("idle");
   const [acknowledged, setAcknowledged] = useState(false);
+  const [revealedCount, setRevealedCount] = useState(0);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  function clearTimers() {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  }
 
   function handleSynthesize() {
     if (stage !== "idle") return;
     setStage("synthesizing");
-    setTimeout(() => setStage("synthesized"), SYNTHESIS_DURATION_MS);
+    setRevealedCount(0);
+    for (let i = 0; i < CARD_COUNT; i++) {
+      timers.current.push(
+        setTimeout(() => setRevealedCount(i + 1), cardExitFinishMs(i)),
+      );
+    }
+    timers.current.push(
+      setTimeout(() => setStage("synthesized"), SYNTHESIS_DURATION_MS),
+    );
   }
 
   function handleConfirm() {
@@ -26,8 +40,10 @@ function App() {
   }
 
   function handleReset() {
+    clearTimers();
     setStage("idle");
     setAcknowledged(false);
+    setRevealedCount(0);
   }
 
   return (
@@ -59,7 +75,7 @@ function App() {
         <SourcePanel stage={stage} />
         <SynthesisButton stage={stage} onSynthesize={handleSynthesize} />
         <div>
-          <BriefPanel stage={stage} />
+          <BriefPanel stage={stage} revealedCount={revealedCount} />
           {(stage === "synthesized" || stage === "confirmed") && (
             <SignoffBar
               stage={stage}

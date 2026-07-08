@@ -12,23 +12,39 @@ const containerVariants: Variants = {
 };
 
 const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0, y: 14, filter: "blur(3px)" },
   visible: {
     opacity: 1,
     y: 0,
+    filter: "blur(0px)",
     transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
   },
 };
 
-export function BriefPanel({ stage }: { stage: Stage }) {
+export function BriefPanel({
+  stage,
+  revealedCount,
+}: {
+  stage: Stage;
+  revealedCount: number;
+}) {
   const briefVisible = stage === "synthesized" || stage === "confirmed";
+  const readoutLabel =
+    stage === "idle"
+      ? "awaiting synthesis"
+      : briefVisible
+        ? "5/5 synthesized"
+        : `${revealedCount}/5 synthesized`;
 
   return (
     <div>
-      <p className="mb-3.5 ml-0.5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-        <span className="h-[7px] w-[7px] rounded-full bg-teal-dark" />
-        Continuum brief
-      </p>
+      <div className="mb-3.5 flex items-baseline gap-3">
+        <p className="whitespace-nowrap font-mono text-[13px] font-medium tracking-tight text-teal-dark">
+          {readoutLabel}
+          {briefVisible && <span className="text-teal"> ✓</span>}
+        </p>
+        <span className="h-px flex-1 bg-line" />
+      </div>
       <AnimatePresence mode="wait">
         {!briefVisible ? (
           <motion.div
@@ -56,8 +72,9 @@ export function BriefPanel({ stage }: { stage: Stage }) {
               variants={sectionVariants}
               className="border-b border-line px-5 py-4"
             >
-              <h4 className="mb-2 font-mono text-[11px] tracking-[0.1em] text-muted uppercase">
-                Active medications (cross-source)
+              <h4 className="mb-2 text-[13.5px] font-semibold text-ink">
+                Active medications{" "}
+                <span className="font-normal text-muted">(cross-source)</span>
               </h4>
               {medications.map((med) => (
                 <MedicationRow key={med.name} medication={med} />
@@ -68,7 +85,7 @@ export function BriefPanel({ stage }: { stage: Stage }) {
               variants={sectionVariants}
               className="flex flex-col gap-2 border-b border-line px-5 py-4"
             >
-              <h4 className="mb-1 font-mono text-[11px] tracking-[0.1em] text-muted uppercase">
+              <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
                 Flagged for review
               </h4>
               {flags.map((flag) => (
@@ -77,7 +94,7 @@ export function BriefPanel({ stage }: { stage: Stage }) {
             </motion.div>
 
             <motion.div variants={sectionVariants} className="px-5 py-4">
-              <h4 className="mb-1 font-mono text-[11px] tracking-[0.1em] text-muted uppercase">
+              <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
                 Open gaps in care
               </h4>
               {gaps.map((gap) => (

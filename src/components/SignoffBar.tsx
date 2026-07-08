@@ -28,7 +28,7 @@ export function SignoffBar({
           checked={acknowledged}
           disabled={confirmed}
           onChange={onToggleAcknowledged}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-teal-dark"
+          className="mt-0.5 h-4 w-4 shrink-0 accent-teal-dark focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:outline-none"
         />
         {signoffLine}
       </label>
@@ -36,11 +36,11 @@ export function SignoffBar({
         type="button"
         disabled={!acknowledged || confirmed}
         onClick={onConfirm}
-        className={`mt-3.5 w-full rounded-lg border-none py-2.75 text-[13.5px] font-semibold transition-colors ${
+        className={`mt-3.5 w-full rounded-lg border-none py-2.75 text-[13.5px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:outline-none ${
           confirmed
             ? "bg-ink text-white"
             : acknowledged
-              ? "cursor-pointer bg-teal-dark text-white"
+              ? "cursor-pointer bg-teal-dark text-white hover:bg-ink"
               : "cursor-not-allowed bg-gray-200 text-gray-400"
         }`}
       >
