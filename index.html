@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continuum — Pre-Visit Synthesis Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1F3A;
+    --bg:#F3F5F8;
+    --panel:#FFFFFF;
+    --teal:#0EA5A0;
+    --teal-dark:#0B8985;
+    --amber:#D97706;
+    --red:#DC2626;
+    --line:#DDE2EA;
+    --text:#111827;
+    --muted:#6B7280;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:36px 24px 80px;}
+
+  header.top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px;}
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand .mark{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.14em;
+    color:var(--teal-dark);background:#E6F6F5;border:1px solid #BEE7E5;padding:3px 8px;border-radius:4px;
+  }
+  h1{font-size:28px;font-weight:800;letter-spacing:-0.02em;margin:0;color:var(--ink);}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
+  p.dek{color:var(--muted);font-size:15px;line-height:1.55;max-width:760px;margin:10px 0 34px;}
+  p.dek b{color:var(--text);}
+
+  .stage{display:grid;grid-template-columns:1fr 46px 1fr;gap:0;align-items:start;}
+  @media (max-width:880px){.stage{grid-template-columns:1fr;}.divider{display:none;}}
+
+  .col-title{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 14px 2px;display:flex;align-items:center;gap:8px;
+  }
+  .col-title .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);}
+  .left .col-title .dot{background:#B45309;}
+  .right .col-title .dot{background:var(--teal-dark);}
+
+  /* --- fragmented source cards --- */
+  .sources{display:flex;flex-direction:column;gap:14px;}
+  .src{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    box-shadow:0 1px 2px rgba(15,23,42,.04);transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .6s ease;
+  }
+  .src.s1{transform:rotate(-0.6deg);} .src.s2{transform:rotate(0.5deg);} .src.s3{transform:rotate(-0.3deg);}
+  .src.s4{transform:rotate(0.7deg);} .src.s5{transform:rotate(-0.4deg);}
+  .src .src-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .src .sys{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#fff;
+    padding:2px 7px;border-radius:4px;font-weight:600;}
+  .src .date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+  .src .body-txt{font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.6;color:#374151;}
+  .src.gone{opacity:0;transform:scale(.85) translateY(6px);}
+
+  .sys.epic{background:#4F46E5;}
+  .sys.rx{background:#059669;}
+  .sys.derm{background:#DB2777;}
+  .sys.lab{background:#B45309;}
+  .sys.er{background:#DC2626;}
+
+  .missing-note{
+    margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9CA3AF;
+    border-top:1px dashed var(--line);padding-top:12px;
+  }
+
+  /* --- divider / action --- */
+  .divider{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:120px;position:relative;}
+  .divider .line{position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line);}
+  .synth-btn{
+    position:relative;z-index:2;background:var(--ink);color:#fff;border:none;border-radius:999px;
+    width:180px;height:44px;transform:rotate(-90deg);font-family:'IBM Plex Mono',monospace;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 16px rgba(11,31,58,.28);
+    transition:background .2s ease,transform .2s ease,opacity .2s ease;
+  }
+  .synth-btn:hover{background:var(--teal-dark);}
+  .synth-btn:disabled{opacity:.5;cursor:default;background:var(--muted);}
+  .synth-btn.spin::before{
+    content:'';position:absolute;inset:-3px;border-radius:999px;border:2px solid transparent;
+    border-top-color:#fff;animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* --- brief panel --- */
+  .brief-empty{
+    border:1.5px dashed var(--line);border-radius:12px;padding:40px 24px;text-align:center;color:var(--muted);
+    font-size:13.5px;line-height:1.6;min-height:340px;display:flex;align-items:center;justify-content:center;
+  }
+  .brief{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0;overflow:hidden;
+    box-shadow:0 8px 24px rgba(15,23,42,.06);opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;
+  }
+  .brief.show{opacity:1;transform:translateY(0);}
+  .brief-hd{background:var(--ink);color:#fff;padding:16px 20px;}
+  .brief-hd .name{font-weight:700;font-size:16px;}
+  .brief-hd .meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B9C4D6;margin-top:3px;}
+  .brief-sec{padding:16px 20px;border-bottom:1px solid var(--line);}
+  .brief-sec:last-child{border-bottom:none;}
+  .brief-sec h4{margin:0 0 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+  .med-row{display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0;}
+  .med-row span.src-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+  .flag{
+    background:#FFF7ED;border:1px solid #FDE0B0;border-radius:8px;padding:10px 12px;font-size:13px;
+    display:flex;gap:9px;align-items:flex-start;color:#92400E;line-height:1.5;
+  }
+  .flag b{color:#B45309;}
+  .flag.crit{background:#FEF2F2;border-color:#FCC;color:#991B1B;}
+  .flag.crit b{color:var(--red);}
+  .gap{font-size:13px;color:#374151;padding:4px 0;display:flex;gap:8px;}
+  .gap::before{content:'—';color:var(--muted);}
+
+  .signoff{
+    margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+    opacity:0;transform:translateY(8px);transition:opacity .5s ease .1s,transform .5s ease .1s;
+  }
+  .signoff.show{opacity:1;transform:translateY(0);}
+  .signoff label{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text);cursor:pointer;line-height:1.5;}
+  .signoff input{margin-top:2px;width:16px;height:16px;accent-color:var(--teal-dark);flex-shrink:0;}
+  .proceed{
+    margin-top:14px;width:100%;border:none;border-radius:8px;padding:11px;font-weight:600;font-size:13.5px;
+    background:#E5E7EB;color:#9CA3AF;cursor:not-allowed;transition:background .2s ease,color .2s ease;
+  }
+  .proceed.active{background:var(--teal-dark);color:#fff;cursor:pointer;}
+  .proceed.done{background:var(--ink);}
+
+  .thesis{
+    margin-top:56px;border-top:1px solid var(--line);padding-top:22px;font-size:13.5px;color:var(--muted);
+    line-height:1.7;max-width:820px;
+  }
+  .thesis b{color:var(--text);}
+  .reset{
+    margin-top:18px;background:none;border:1px solid var(--line);color:var(--muted);padding:7px 14px;
+    border-radius:7px;font-size:12px;font-family:'IBM Plex Mono',monospace;cursor:pointer;
+  }
+  .reset:hover{border-color:var(--muted);color:var(--text);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="mark">CONTINUUM</span>
+      <h1>Pre-Visit Synthesis Brief</h1>
+    </div>
+    <span class="tag">simulation — patient #4471, fictional data</span>
+  </header>
+  <p class="dek">The record on the left already contains everything a clinician needs. It's just split across five systems that don't talk to each other. <b>Continuum doesn't add information — it removes the access tax on information that already exists,</b> and hands judgment back to the clinician.</p>
+
+  <div class="stage">
+    <div class="left">
+      <p class="col-title"><span class="dot"></span>Five disconnected systems</p>
+      <div class="sources" id="sources">
+        <div class="src s1" data-id="1">
+          <div class="src-head"><span class="sys epic">EPIC · PCP OFFICE</span><span class="date">Jun 14, 2026</span></div>
+          <div class="body-txt">Visit note: pt reports fatigue, occasional dizziness. Started lisinopril 10mg for BP mgmt. F/u in 3 months.</div>
+        </div>
+        <div class="src s2" data-id="2">
+          <div class="src-head"><span class="sys rx">RX · WALGREENS</span><span class="date">Jun 20, 2026</span></div>
+          <div class="body-txt">Fill history: sumatriptan 50mg, qty 9, prescribed by Dr. Osei (Neurology) — migraine, as-needed.</div>
+        </div>
+        <div class="src s3" data-id="3">
+          <div class="src-head"><span class="sys derm">CERNER · CARDIOLOGY</span><span class="date">May 02, 2026</span></div>
+          <div class="body-txt">Consult note: borderline QT prolongation on EKG, monitor with any new prescriptions. No action taken.</div>
+        </div>
+        <div class="src s4" data-id="4">
+          <div class="src-head"><span class="sys lab">QUEST DIAGNOSTICS</span><span class="date">Jun 18, 2026</span></div>
+          <div class="body-txt">Lab panel: potassium 5.3 mmol/L (high). Ordering provider: PCP office. No follow-up scheduled.</div>
+        </div>
+        <div class="src s5" data-id="5">
+          <div class="src-head"><span class="sys er">ER · CITY GENERAL</span><span class="date">Apr 29, 2026</span></div>
+          <div class="body-txt">D/c summary: presented with palpitations, ruled out MI. Advised outpatient cardiology f/u — no record of scheduling found elsewhere.</div>
+        </div>
+      </div>
+      <p class="missing-note">↳ none of these five systems can see the other four. The PCP prescribing today sees only the top card.</p>
+    </div>
+
+    <div class="divider">
+      <div class="line"></div>
+      <button class="synth-btn" id="synthBtn" onclick="synthesize()">Synthesize →</button>
+    </div>
+
+    <div class="right">
+      <p class="col-title"><span class="dot"></span>Continuum brief</p>
+      <div id="emptyState" class="brief-empty">No synthesized brief yet.<br>Right now, today's decision depends entirely on which of the five cards the clinician happens to have open.</div>
+      <div id="brief" class="brief">
+        <div class="brief-hd">
+          <div class="name">Patient #4471 — Pre-Visit Brief</div>
+          <div class="meta">Generated from 5 sources · Today, 8:42 AM · Not a diagnosis</div>
+        </div>
+        <div class="brief-sec">
+          <h4>Active medications (cross-source)</h4>
+          <div class="med-row"><span>Lisinopril 10mg, daily</span><span class="src-tag">EPIC · PCP</span></div>
+          <div class="med-row"><span>Sumatriptan 50mg, as-needed</span><span class="src-tag">RX · WALGREENS</span></div>
+        </div>
+        <div class="brief-sec">
+          <h4>Flagged for review</h4>
+          <div class="flag crit"><span>⚠</span><span><b>Interaction risk:</b> sumatriptan + borderline QT prolongation (Cardiology, May 2) — no cross-check occurred at time of prescribing.</span></div>
+          <div class="flag"><span>⚠</span><span><b>Lab follow-up gap:</b> elevated potassium (Jun 18) — no follow-up on file, and lisinopril can raise potassium further.</span></div>
+        </div>
+        <div class="brief-sec">
+          <h4>Open gaps in care</h4>
+          <div class="gap">ER-recommended cardiology follow-up (Apr 29) — no record it was ever scheduled</div>
+          <div class="gap">Last EKG on file: 6 weeks ago</div>
+        </div>
+      </div>
+
+      <div class="signoff" id="signoff">
+        <label><input type="checkbox" id="ack" onchange="toggleProceed()"> I've reviewed this brief against the chart. It informs, but doesn't replace, my clinical judgment.</label>
+        <button class="proceed" id="proceedBtn" onclick="proceed()">Confirm & proceed to visit</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="thesis">The point isn't that Continuum knows something new about this patient — <b>every fact above already existed</b> in one of the five systems on the left. The point is that no single person, in a 15-minute visit, could reasonably be expected to open all five. Continuum's only job is closing that access gap; the checkbox above is deliberate — the system stops short of a decision on purpose.</p>
+  <button class="reset" onclick="location.reload()">↺ reset simulation</button>
+</div>
+
+<script>
+function synthesize(){
+  const btn = document.getElementById('synthBtn');
+  if(btn.disabled) return;
+  btn.disabled = true;
+  btn.classList.add('spin');
+  btn.textContent = '';
+  document.querySelectorAll('.src').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('gone'), i*90);
+  });
+  setTimeout(()=>{
+    document.getElementById('emptyState').style.display='none';
+    document.getElementById('brief').classList.add('show');
+    document.getElementById('signoff').classList.add('show');
+    btn.classList.remove('spin');
+    btn.textContent = 'Synthesized ✓';
+  }, 950);
+}
+function toggleProceed(){
+  const ack = document.getElementById('ack').checked;
+  document.getElementById('proceedBtn').classList.toggle('active', ack);
+}
+function proceed(){
+  const btn = document.getElementById('proceedBtn');
+  if(!document.getElementById('ack').checked) return;
+  btn.textContent = 'Confirmed — visit context loaded ✓';
+  btn.classList.add('done');
+  btn.disabled = true;
+}
+</script>
+</body>
+</html>
